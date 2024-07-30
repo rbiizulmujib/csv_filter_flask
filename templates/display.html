@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV Data Table</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-6xl">
+        <h1 class="text-2xl font-bold mb-6 text-center">CSV Data Table</h1>
+
+        <!-- Form Upload CSV -->
+        <form action="/" method="post" enctype="multipart/form-data" class="space-y-4 mb-6">
+            <input type="file" name="file" accept=".csv" class="block w-full text-gray-700 border border-gray-300 rounded-md py-2 px-4">
+            <button type="submit" class="w-full bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800">Upload New CSV</button>
+        </form>
+
+        <!-- Form Filter Data -->
+        <form method="get" action="{{ url_for('display', filename=filename) }}" class="space-y-4 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div>
+                    <label for="favs_min" class="block text-gray-700">Filter by Favs greater than:</label>
+                    <input type="number" id="favs_min" name="favs_min" value="{{ favs_min }}" class="block w-full text-gray-700 border border-gray-300 rounded-md py-2 px-4">
+                </div>
+                <div>
+                    <label for="listing_age_max" class="block text-gray-700">Filter by Listing Age less than:</label>
+                    <input type="number" id="listing_age_max" name="listing_age_max" value="{{ listing_age_max }}" class="block w-full text-gray-700 border border-gray-300 rounded-md py-2 px-4">
+                </div>
+            </div>
+            <button type="submit" class="w-full bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800">Apply Filters</button>
+        </form>
+
+        <div class="overflow-x-auto">
+            <table id="csvTable" class="display w-full text-sm text-left text-gray-700">
+                <thead>
+                    <tr class="bg-gray-100">
+                        {% for col in columns %}
+                            <th class="py-2 px-4">{{ col }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in data %}
+                        <tr class="border-b">
+                            {% for col in columns %}
+                                <td class="py-2 px-4">
+                                    {% if col == 'link' %}
+                                        <a href="{{ row[col] }}" target="_blank" class="text-blue-500 hover:underline">Lihat</a>
+                                    {% else %}
+                                        {{ row[col] }}
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#csvTable').DataTable({
+                "pageLength": 100
+            });
+        });
+    </script>
+</body>
+</html>
