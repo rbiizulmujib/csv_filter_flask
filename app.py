@@ -54,4 +54,4 @@ def display(filename):
     return render_template('display.html', data=data, columns=columns, filename=filename, favs_min=favs_min, listing_age_max=listing_age_max, sort_by=sort_by, sort_order=sort_order)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(port=8080)
